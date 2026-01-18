@@ -1,67 +1,67 @@
 """
 主应用类
 """
-import tkinter as tk
-from tkinter import ttk, messagebox
-import threading
-import time
-import logging
-from typing import Optional
+将Tkinter导入为tk
+从Tkinter导入TTK、MessageBox
+导入线程
+导入时间
+导入日志记录
+从键入导入可选
 
-from src.core.window_manager import WindowManager, WindowSettings, WindowState
-from src.core.mouse_tracker import MouseTracker
-from src.utils.config import ConfigManager
+从源.核心。窗口管理器(_M)导入WindowManager、WindowSettings、WindowState
+从src.core.mouse_tracker导入鼠标跟踪器
+从src.utils.config导入ConfigManager
 
-logger = logging.getLogger(__name__)
+logger=logging.getLogger(__姓名__)
 
-class FloatingApp:
-    """悬浮窗主应用"""
+类FloatingApp：
+"""悬浮窗主应用"""
     
-    def __init__(self):
-        self.config = ConfigManager()
-        self.window_manager: Optional[WindowManager] = None
-        self.mouse_tracker: Optional[MouseTracker] = None
-        self.ui_components = {}
-        self.is_running = False
+    Def__init__(self)：
+    self.config=ConfigManager()
+    self.window_manager：可选[WindowManager]=无
+    self.mouse_tracker：可选[MouseTracker]=无
+    self.ui_components={}
+    self.is_running=False
         
-        # 初始化组件
-        self._init_components()
+    # 初始化组件
+    self._init_components()
     
-    def _init_components(self):
-        """初始化组件"""
-        try:
-            # 加载配置
-            window_config = self.config.get("window", {})
+    Def_init_components(self)：
+    """初始化组件"""
+    尝试：
+    # 加载配置
+    window_config=self.config.get("window"，{})
             
-            # 创建窗口设置
-            window_settings = WindowSettings(
-                title="悬浮窗工具箱",
-                width=window_config.get("width", 320),
-                height=window_config.get("height", 240),
-                always_on_top=window_config.get("always_on_top", True),
-                alpha=window_config.get("transparency", 0.9),
-                borderless=window_config.get("borderless", True),
-                follow_mouse=window_config.get("follow_mouse", True),
-                follow_offset_x=window_config.get("follow_offset_x", 20),
-                follow_offset_y=window_config.get("follow_offset_y", 20)
+    # 创建窗口设置
+    window_settings=WindowSettings(
+    标题="悬浮窗工具箱"，
+    width=window_config.get("width"，320)，
+    height=window_config.get("height"，240)，
+    always_on_top=窗口配置get("always_on_top"，正确)，
+    Alpha=window_config.get(“透明度”，0.9)，
+    borderless=window_config.get("borderless"，True)，
+    follow_mouse=窗口配置get("follow_mouse"，正确)，
+    follow_offset_x=窗口配置get("follow_offset_x"，20)，
+    follow_offset_y=窗口配置get("follow_offset_y"，20)
             )
             
-            # 创建窗口管理器
-            self.window_manager = WindowManager(window_settings)
-            self.window_manager.create_window()
+    # 创建窗口管理器
+    self.window_manager=WindowManager(窗口设置)
+    self.window_manager.create_window()
             
-            # 创建鼠标跟踪器
-            update_interval = self.config.get("performance.update_interval_ms", 50) / 1000.0
-            self.mouse_tracker = MouseTracker(update_interval=update_interval)
+    # 创建鼠标跟踪器
+    update_interval=自己。config.get("性能更新间隔时间ms"，50)/1000.0
+    self.mouse_tracker=鼠标跟踪器(update_interval=update_interval)
             
-            # 设置回调
-            if self.window_manager.root:
-                self.mouse_tracker.add_callback(self._on_mouse_move)
-                self.window_manager.add_close_callback(self._on_window_close)
+    # 设置回调
+    如果self.window_manager.root：
+    自己。鼠标跟踪器(_T)。添加回调(self.on mouse_move)
+    自己。窗口管理器(_M)。add_close_callback(self._on_window_close)
             
-            logger.info("组件初始化完成")
+    Logger.info("组件初始化完成")
             
-        except Exception as e:
+    例外情况除外，如e：
             logger.error(f"组件初始化失败: {e}")
             raise
     
